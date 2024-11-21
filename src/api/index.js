@@ -18,6 +18,12 @@ api.interceptors.request.use(
   }
 );
 
-export const getFiles = (page = 1) => api.get(`/pdf-manuals?page=${page}`);
+export const getFiles = (page = 1, archived = false) =>
+  api.get(`/pdf-manuals?page=${page}&archived=${archived}`);
+
 export const uploadFiles = (formData) => api.post(`/pdf-manuals`, formData);
+
+export const archiveFiles = (selectedIds) =>
+  api.patch(`/pdf-manuals/archive`, selectedIds);
+
 export default api;

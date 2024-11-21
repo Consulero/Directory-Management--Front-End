@@ -9,6 +9,7 @@ import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import Fileupload from "./pages/Fileupload";
 import Files from "./pages/Files";
+import ArchivedFile from "./pages/ArchivedFile";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
             <Route path="/" element={<Dashboard />} />
             <Route path="/upload" element={<Fileupload />} />
             <Route path="/files" element={<Files />} />
+            <Route path="/archive-files" element={<ArchivedFile />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

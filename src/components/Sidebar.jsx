@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { HomeIcon, UploadIcon, FilesIcon } from "../icons";
+import { HomeIcon, UploadIcon, FilesIcon, ArchiveIcon } from "../icons";
 
 const Sidebar = () => {
   return (
@@ -14,15 +14,24 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
-          <Link className="flex items-center hover:text-blue-400" to="/upload">
-            <UploadIcon className="w-5 h-5 mr-2" />
-            Upload
-          </Link>
-        </li>
-        <li>
           <Link className="flex items-center hover:text-blue-400" to="/files">
             <FilesIcon className="w-5 h-5 mr-2" />
             Files
+          </Link>
+        </li>
+        <li>
+          <Link
+            className="flex items-center hover:text-blue-400"
+            to="/archive-files"
+          >
+            <ArchiveIcon className="w-5 h-5 mr-2" />
+            Archived
+          </Link>
+        </li>
+        <li>
+          <Link className="flex items-center hover:text-blue-400" to="/upload">
+            <UploadIcon className="w-5 h-5 mr-2" />
+            Upload
           </Link>
         </li>
       </ul>

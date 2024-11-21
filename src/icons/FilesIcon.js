@@ -1,4 +1,3 @@
-// src/icons/FilesIcon.js
 import React from "react";
 
 const FilesIcon = ({ className = "w-5 h-5" }) => {

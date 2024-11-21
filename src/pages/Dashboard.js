@@ -1,7 +1,13 @@
-import React from 'react';
+import React from "react";
+import HeaderSection from "../components/HeaderSection";
+
 
 const Dashboard = () => {
-    return <div><h2>Dashboard Page</h2></div>;
+  return (
+    <>
+      <HeaderSection title={"Dashboard"} />
+    </>
+  );
 };
 
 export default Dashboard;

@@ -1,4 +1,3 @@
-// src/icons/HomeIcon.js
 import React from 'react';
 
 const HomeIcon = ({ className = "w-5 h-5" }) => {

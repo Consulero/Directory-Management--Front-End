@@ -1,11 +1,24 @@
 import React, { useRef, useState } from "react";
 import { uploadFiles } from "../api";
+import HeaderSection from "../components/HeaderSection";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { COUNTRIES, MANUFACTURER, YEAR } from "../data/index";
 
 const FileUpload = () => {
+  const initialState = {
+    manufacturer: undefined,
+    year: undefined,
+    model: undefined,
+    // trim: undefined,
+    publication_date: undefined,
+    region: undefined,
+    software_version: undefined,
+  };
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState(null);
   const fileInputRef = useRef(null); // Ref for the file input
+  const [formInput, setFormInput] = useState(initialState);
 
   const handleFileSelect = (event) => {
     const files = Array.from(event.target.files);
@@ -14,36 +27,65 @@ const FileUpload = () => {
   };
 
   const handleUpload = async () => {
-    if (selectedFiles.length === 0) {
-      alert("Please select files to upload.");
-      return;
-    }
-
     setUploading(true);
-    setError(null);
 
     const formData = new FormData();
     selectedFiles.forEach((file) => formData.append("files", file));
 
+    // adding the fromInput data to formData
+    Object.keys(formInput).forEach((key) => {
+      formData.append(key, formInput[key]);
+    });
+
     try {
-      const response = await uploadFiles(formData);
-
-      if (!response.ok) {
-        throw new Error("Upload failed.");
+      if (
+        !formInput.model ||
+        !formInput.manufacturer ||
+        !formInput.year ||
+        !formInput.publication_date
+      ) {
+        return toast.error(
+          "Missing: Manufacturer | Model | Year | Publish Date"
+        );
       }
+      const response = await uploadFiles(formData);
+      if (response?.data?.data) {
+        const { successResult, failureResult } = response.data.data;
 
-      alert("Files uploaded successfully!");
-      setSelectedFiles([]);
+        if (successResult.length > 0) {
+          toast.success(`Successfully uploaded: ${successResult.join(", ")}`, {
+            position: "top-right",
+          });
+        }
+
+        if (failureResult.length > 0) {
+          toast.error(`Failed to upload: ${failureResult.join(", ")}`, {
+            position: "top-right",
+          });
+        }
+        setSelectedFiles([]);
+        setFormInput(initialState);
+      }
     } catch (err) {
-      setError(err.message);
+      return toast.error("Upload Failed!");
     } finally {
       setUploading(false);
     }
   };
 
+  const inputEvent = (e) => {
+    const { name, value } = e.target;
+    setFormInput((old) => {
+      return {
+        ...old,
+        [name]: value,
+      };
+    });
+  };
+
   const handleSpanClick = () => {
     if (fileInputRef.current) {
-      fileInputRef.current.click(); // Trigger file input click
+      fileInputRef.current.click();
     }
   };
 
@@ -54,8 +96,107 @@ const FileUpload = () => {
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">File Uploader</h2>
+    <>
+      <HeaderSection title={"File Upload"} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6 bg-white rounded-md shadow-lg p-6">
+        <div>
+          <label className="font-semibold text-gray-700">Manufacturer</label>
+          <select
+            id="manufacturer"
+            name="manufacturer"
+            className="block w-full mt-1 p-2 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-400 text-sm bg-gray-50"
+            value={formInput.manufacturer}
+            onChange={inputEvent}
+          >
+            <option value={null}>Select Manufacturer</option>
+            {Object.keys(MANUFACTURER).map((value, idx) => (
+              <option key={idx} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="font-semibold text-gray-700">Model</label>
+          <select
+            id="model"
+            name="model"
+            className="block w-full mt-1 p-2 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-400 text-sm bg-gray-50"
+            value={formInput.model}
+            onChange={inputEvent}
+          >
+            <option value={null}>Select Model</option>
+            {MANUFACTURER[formInput.manufacturer]?.map((value, idx) => (
+              <option key={idx} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="font-semibold text-gray-700">Year</label>
+          <select
+            id="year"
+            name="year"
+            className="block w-full mt-1 p-2 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-400 text-sm bg-gray-50"
+            value={formInput.year}
+            onChange={inputEvent}
+          >
+            <option value={null}>Select Year</option>
+            {YEAR.map((value, idx) => (
+              <option key={idx} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="font-semibold text-gray-700">
+            Manual Publish Date
+          </label>
+          <input
+            id="publication_date"
+            name="publication_date"
+            type="date"
+            className="block w-full mt-1 p-2 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-400 text-sm bg-gray-50"
+            value={formInput.publication_date || ""}
+            onChange={inputEvent}
+          />
+        </div>
+        <div>
+          <label className="font-semibold text-gray-700">Region</label>
+          <select
+            id="region"
+            name="region"
+            className="block w-full mt-1 p-2 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-400 text-sm bg-gray-50"
+            value={formInput.region}
+            onChange={inputEvent}
+          >
+            <option value={null}>Select Region</option>
+            {COUNTRIES.map((value, idx) => (
+              <option key={idx} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="font-semibold text-gray-700">
+            Software Version
+          </label>
+          <input
+            id="software_version"
+            name="software_version"
+            className="block w-full mt-1 p-2 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-400 text-sm bg-gray-50"
+            value={formInput.software_version}
+            onChange={inputEvent}
+          />
+        </div>
+      </div>
+
       <div className="max-w-lg mx-auto p-6   border border-gray-300 rounded-md">
         <div
           className="border-dashed border-2 border-gray-400 rounded-lg p-8 text-center bg-gray-50 hover:bg-gray-100 transition-all"
@@ -85,7 +226,7 @@ const FileUpload = () => {
             multiple
             onChange={handleFileSelect}
             ref={fileInputRef}
-            className="hidden" // Hide the file input
+            className="hidden"
           />
         </div>
 
@@ -123,10 +264,9 @@ const FileUpload = () => {
         >
           {uploading ? "Uploading..." : "Upload"}
         </button>
-
-        {error && <div className="text-red-500 mt-2">{error}</div>}
+        <ToastContainer />
       </div>
-    </div>
+    </>
   );
 };
 
