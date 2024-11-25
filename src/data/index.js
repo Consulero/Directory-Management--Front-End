@@ -28,3 +28,5 @@ export const MANUFACTURER = {
   Nissan: ["Ariya Engage", "Ariya Evolve e-4ORCE", "Leaf SV"],
   Audi: ["Q4 e-tron 45", "Q6 e-tron", "SQ8 e-tron quattro"],
 };
+
+export const REVISION = [1, 2, 3, 4, 5];

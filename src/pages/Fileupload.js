@@ -3,17 +3,17 @@ import { uploadFiles } from "../api";
 import HeaderSection from "../components/HeaderSection";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { COUNTRIES, MANUFACTURER, YEAR } from "../data/index";
+import { COUNTRIES, MANUFACTURER, YEAR, REVISION } from "../data/index";
 
 const FileUpload = () => {
   const initialState = {
-    manufacturer: undefined,
-    year: undefined,
-    model: undefined,
-    // trim: undefined,
-    publication_date: undefined,
-    region: undefined,
-    software_version: undefined,
+    manufacturer: null,
+    year: null,
+    model: null,
+    revision: null,
+    publication_date: null,
+    region: null,
+    software_version: null,
   };
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
@@ -42,15 +42,18 @@ const FileUpload = () => {
         !formInput.model ||
         !formInput.manufacturer ||
         !formInput.year ||
-        !formInput.publication_date
+        !formInput.publication_date ||
+        !formInput.revision
       ) {
         return toast.error(
-          "Missing: Manufacturer | Model | Year | Publish Date"
+          "Missing: Manufacturer | Model | Year | Publish Date | Revision"
         );
       }
       const response = await uploadFiles(formData);
+
       if (response?.data?.data) {
-        const { successResult, failureResult } = response.data.data;
+        const { successResult, failureResult, alreadyExist } =
+          response.data.data;
 
         if (successResult.length > 0) {
           toast.success(`Successfully uploaded: ${successResult.join(", ")}`, {
@@ -60,6 +63,12 @@ const FileUpload = () => {
 
         if (failureResult.length > 0) {
           toast.error(`Failed to upload: ${failureResult.join(", ")}`, {
+            position: "top-right",
+          });
+        }
+
+        if (alreadyExist.length > 0) {
+          toast.error(`Already Exist: ${alreadyExist.join(", ")}`, {
             position: "top-right",
           });
         }
@@ -98,7 +107,7 @@ const FileUpload = () => {
   return (
     <>
       <HeaderSection title={"File Upload"} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6 bg-white rounded-md shadow-lg p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6 bg-white rounded-md shadow-lg p-6">
         <div>
           <label className="font-semibold text-gray-700">Manufacturer</label>
           <select
@@ -116,7 +125,6 @@ const FileUpload = () => {
             ))}
           </select>
         </div>
-
         <div>
           <label className="font-semibold text-gray-700">Model</label>
           <select
@@ -165,6 +173,23 @@ const FileUpload = () => {
             value={formInput.publication_date || ""}
             onChange={inputEvent}
           />
+        </div>
+        <div>
+          <label className="font-semibold text-gray-700">Revision</label>
+          <select
+            id="revision"
+            name="revision"
+            className="block w-full mt-1 p-2 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-400 text-sm bg-gray-50"
+            value={formInput.revision}
+            onChange={inputEvent}
+          >
+            <option value={null}>Select Revision</option>
+            {REVISION.map((value, idx) => (
+              <option key={idx} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label className="font-semibold text-gray-700">Region</label>

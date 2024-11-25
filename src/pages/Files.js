@@ -4,6 +4,7 @@ import Table from "../components/Table";
 import HeaderSection from "../components/HeaderSection";
 import Pagination from "../components/Pagination";
 import { toast, ToastContainer } from "react-toastify";
+import moment from "moment";
 
 const FileList = () => {
   const [files, setFiles] = useState([]);
@@ -37,6 +38,22 @@ const FileList = () => {
     try {
       const archivedStatus = false;
       const response = await getFiles(page, archivedStatus);
+      response?.data?.data?.forEach((record) => {
+        const age = moment().diff(moment(record.publication_date), "months");
+        record.age =
+          age > 24
+            ? "> 2 years"
+            : age > 12
+            ? "> 1 year"
+            : age > 6
+            ? "> 6 months"
+            : "> 1 month";
+        record.publication_date = moment(record.publication_date).format(
+          "DD-MM-YYYY"
+        );
+        record.createdAt = moment(record.createdAt).format("DD-MM-YYYY");
+      });
+
       setFiles(response.data?.data || []);
       setTotalPages(response.data?.pagination?.totalPages || 1);
     } catch (err) {
@@ -48,11 +65,12 @@ const FileList = () => {
 
   const handleArchive = async () => {
     try {
-      const result = await archiveFiles({ ids: selectedRows });
+      const data = { ids: selectedRows, archivedStatus: true };
+      const result = await archiveFiles(data);
       if (result.status === 200) {
         setSelectedRows([]);
         // update the file to remove higlited row
-        return toast.success(result.data.message);
+        return toast.success(`${result.data.message} File Archived`);
       } else {
         return toast.error(result.data.message);
       }
@@ -79,9 +97,13 @@ const FileList = () => {
     { header: "File", key: "file_name", width: "20%" },
     { header: "Manufacturer", key: "manufacturer", width: "10%" },
     { header: "Model", key: "model", width: "10%" },
+    // { header: "Revision", key: "revision", width: "10%" },
+    // { header: "Region", key: "region", width: "10%" },
     { header: "Year", key: "year", width: "10%" },
     { header: "Published", key: "publication_date", width: "10%" },
     { header: "Uploaded By", key: "uploaded_by", width: "10%" },
+    { header: "Uploaded At", key: "createdAt", width: "10%" },
+    { header: "Age", key: "age", width: "10%" },
   ];
 
   if (loading) return <div>Loading files...</div>;
@@ -96,7 +118,7 @@ const FileList = () => {
           className={`px-3 py-1 mr-2 text-sm rounded-md 
             ${
               selectedRows.length < 1
-                ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+                ? "bg-gray-500 text-white cursor-not-allowed"
                 : "bg-[#454444] text-white hover:scale-110 transform transition-all duration-200"
             }`}
           onClick={handleArchive}

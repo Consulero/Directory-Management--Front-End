@@ -23,7 +23,10 @@ export const getFiles = (page = 1, archived = false) =>
 
 export const uploadFiles = (formData) => api.post(`/pdf-manuals`, formData);
 
-export const archiveFiles = (selectedIds) =>
-  api.patch(`/pdf-manuals/archive`, selectedIds);
+export const archiveFiles = (data) => api.patch(`/pdf-manuals/archive`, data);
+
+export const deleteFiles = (data) => api.post(`/pdf-manuals/bulk`, data);
+
+export const dashboardData = () => api.get(`/pdf-manuals/dashboard`);
 
 export default api;

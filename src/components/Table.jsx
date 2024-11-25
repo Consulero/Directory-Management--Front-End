@@ -8,7 +8,7 @@ const Table = ({ data, columns, onRowSelect }) => {
               {columns.map((column, index) => (
                 <th
                   key={index}
-                  className="border-b bg-gray-200 p-2 text-center"
+                  className="border-b bg-gray-200 p-2 text-sm text-left text-semibold"
                   style={{ width: column.width || "auto" }}
                 >
                   {column.header}
@@ -24,10 +24,7 @@ const Table = ({ data, columns, onRowSelect }) => {
                 onClick={() => onRowSelect(rowIndex)}
               >
                 {columns.map((column, colIndex) => (
-                  <td
-                    key={colIndex}
-                    className="border-b border-gray-300 p-1 text-center"
-                  >
+                  <td key={colIndex} className="border-b border-gray-300 p-1 text-sm pl-2">
                     {row[column.key]}
                   </td>
                 ))}
