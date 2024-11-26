@@ -14,9 +14,9 @@ import ArchivedFile from "./pages/ArchivedFile";
 const App = () => {
   return (
     <Router>
-      <div className="flex">
-        <Sidebar />
-        <div className="flex-1 p-5">
+      <div className="flex h-screen">
+        <Sidebar className="w-64 bg-gray-800 text-white fixed h-screen"/>
+        <div className="flex-1 overflow-y-auto p-5">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/upload" element={<Fileupload />} />

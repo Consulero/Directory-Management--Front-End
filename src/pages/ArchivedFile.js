@@ -70,12 +70,12 @@ const ArchivedFile = () => {
       if (result.status === 200) {
         setSelectedRows([]);
         // update the file to remove higlited row
-        return toast.success(`${result.data.message} File Deleted`);
+        return toast.success(`${result.data.message} File Unarchive`);
       } else {
         return toast.error(result.data.message);
       }
     } catch (err) {
-      toast.error("Failed to archive");
+      toast.error("Failed to Unarchive");
     }
   };
 
@@ -86,7 +86,7 @@ const ArchivedFile = () => {
       if (result.status === 200) {
         setSelectedRows([]);
         // update the file to remove higlited row
-        return toast.success(`${result.data.message} files Deleted`);
+        return toast.success(`${result.data.message} Files Deleted`);
       } else {
         return toast.error(result.data.message);
       }
@@ -113,11 +113,11 @@ const ArchivedFile = () => {
     { header: "File", key: "file_name", width: "20%" },
     { header: "Manufacturer", key: "manufacturer", width: "10%" },
     { header: "Model", key: "model", width: "10%" },
-    { header: "Year", key: "year", width: "10%" },
+    { header: "Year", key: "year", width: "5%" },
     { header: "Published", key: "publication_date", width: "10%" },
-    { header: "Uploaded By", key: "uploaded_by", width: "10%" },
     { header: "Uploaded At", key: "createdAt", width: "10%" },
     { header: "Age", key: "age", width: "10%" },
+    { header: "Uploaded By", key: "uploaded_by", width: "10%" },
   ];
 
   if (loading) return <div>Loading files...</div>;

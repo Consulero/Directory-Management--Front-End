@@ -79,6 +79,14 @@ const FileList = () => {
     }
   };
 
+  const handleModify = async () => {
+    try {
+      //...
+    } catch (err) {
+      toast.error("Failed to modify");
+    }
+  };
+
   useEffect(() => {
     fetchFiles(currentPage);
     setSelectedRows([]);
@@ -99,11 +107,11 @@ const FileList = () => {
     { header: "Model", key: "model", width: "10%" },
     // { header: "Revision", key: "revision", width: "10%" },
     // { header: "Region", key: "region", width: "10%" },
-    { header: "Year", key: "year", width: "10%" },
+    { header: "Year", key: "year", width: "5%" },
     { header: "Published", key: "publication_date", width: "10%" },
-    { header: "Uploaded By", key: "uploaded_by", width: "10%" },
     { header: "Uploaded At", key: "createdAt", width: "10%" },
     { header: "Age", key: "age", width: "10%" },
+    { header: "Uploaded By", key: "uploaded_by", width: "10%" },
   ];
 
   if (loading) return <div>Loading files...</div>;
@@ -113,18 +121,32 @@ const FileList = () => {
     <>
       <div className="flex justify-between items-center mb-3">
         <HeaderSection title={"List Files"} />
-        <button
-          disabled={selectedRows.length < 1}
-          className={`px-3 py-1 mr-2 text-sm rounded-md 
-            ${
-              selectedRows.length < 1
-                ? "bg-gray-500 text-white cursor-not-allowed"
-                : "bg-[#454444] text-white hover:scale-110 transform transition-all duration-200"
-            }`}
-          onClick={handleArchive}
-        >
-          Archive
-        </button>
+        <div className="ml-auto flex space-x-2">
+          <button
+            disabled={selectedRows.length !== 1}
+            className={`px-3 py-1 text-sm rounded-md 
+        ${
+          selectedRows.length !== 1
+            ? "bg-blue-300 text-white cursor-not-allowed"
+            : "bg-blue-500 text-white hover:scale-110 transform transition-all duration-200"
+        }`}
+            onClick={handleModify}
+          >
+            Update
+          </button>
+          <button
+            disabled={selectedRows.length < 1}
+            className={`px-3 py-1 text-sm rounded-md 
+        ${
+          selectedRows.length < 1
+            ? "bg-gray-500 text-white cursor-not-allowed"
+            : "bg-[#454444] text-white hover:scale-110 transform transition-all duration-200"
+        }`}
+            onClick={handleArchive}
+          >
+            Archive
+          </button>
+        </div>
       </div>
       <Table data={files} columns={columns} onRowSelect={handleRowSelect} />
       <Pagination
