@@ -27,7 +27,7 @@ const Model = ({ setShowModal, handleFileUpload }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-6 rounded-md shadow-lg w-1/3">
+      <div className="bg-white p-4 sm:p-6 rounded-md shadow-lg w-full max-w-lg mx-4 sm:mx-0">
         <h2 className="text-lg font-bold mb-4">Upload File</h2>
         <div className="border border-dashed border-gray-400 rounded-lg p-6 text-center">
           <p className="text-gray-600">
