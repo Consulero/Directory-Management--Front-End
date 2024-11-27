@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { getFiles, archiveFiles } from "../api";
+import { getFiles, archiveFiles, updateFiles } from "../api";
 import Table from "../components/Table";
 import HeaderSection from "../components/HeaderSection";
 import Pagination from "../components/Pagination";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
+import Model from "../components/Model";
 
 const FileList = () => {
   const [files, setFiles] = useState([]);
@@ -13,6 +14,7 @@ const FileList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   const handleRowSelect = (rowIndex) => {
     const updatedFiles = [...files];
@@ -80,10 +82,21 @@ const FileList = () => {
   };
 
   const handleModify = async () => {
+    setShowModal(true);
+  };
+
+  const handleFileUpload = async (formData) => {
     try {
-      //...
-    } catch (err) {
-      toast.error("Failed to modify");
+      const result = await updateFiles(formData, selectedRows[0]);
+
+      if (result.data.type === "success") {
+        toast.success("File data updated");
+      } else {
+        toast.error("Failed to update");
+      }
+    } catch (error) {
+      console.error("Update failed:", error);
+      toast.error("Failed to update");
     }
   };
 
@@ -102,6 +115,7 @@ const FileList = () => {
   };
 
   const columns = [
+    { header: "ID", key: "id", width: "5%" },
     { header: "File", key: "file_name", width: "20%" },
     { header: "Manufacturer", key: "manufacturer", width: "10%" },
     { header: "Model", key: "model", width: "10%" },
@@ -148,6 +162,12 @@ const FileList = () => {
           </button>
         </div>
       </div>
+      {showModal && (
+        <Model
+          setShowModal={setShowModal}
+          handleFileUpload={handleFileUpload}
+        />
+      )}
       <Table data={files} columns={columns} onRowSelect={handleRowSelect} />
       <Pagination
         currentPage={currentPage}

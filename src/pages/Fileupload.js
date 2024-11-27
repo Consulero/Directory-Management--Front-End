@@ -28,7 +28,6 @@ const FileUpload = () => {
     } else {
       setSelectedFiles((prevFiles) => [...prevFiles, ...pdfFiles]);
     }
-    // setSelectedFiles((prevFiles) => [...prevFiles, ...pdfFiles]);
   };
 
   const handleUpload = async () => {
@@ -306,7 +305,7 @@ const FileUpload = () => {
                 : "hover:bg-gray-300"
             } text-black font-semibold`}
           >
-            {uploading ? "Uploading..." : "Upload"}
+            {uploading ? "uploading..." : "UPLOAD"}
           </button>
           <ToastContainer />
         </div>

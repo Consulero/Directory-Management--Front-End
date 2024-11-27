@@ -29,4 +29,7 @@ export const deleteFiles = (data) => api.post(`/pdf-manuals/bulk`, data);
 
 export const dashboardData = () => api.get(`/pdf-manuals/dashboard`);
 
+export const updateFiles = (formData, id) =>
+  api.put(`/pdf-manuals/${id}`, formData);
+
 export default api;
