@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { HomeIcon, UploadIcon, FilesIcon, ArchiveIcon } from "../icons";
+import {
+  HomeIcon,
+  UploadIcon,
+  FilesIcon,
+  ArchiveIcon,
+  BeakerIcon,
+} from "../icons";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +21,7 @@ const Sidebar = () => {
     { path: "/files", label: "Files", icon: FilesIcon },
     { path: "/archive-files", label: "Archived", icon: ArchiveIcon },
     { path: "/upload", label: "Upload", icon: UploadIcon },
+    { path: "/faqs", label: "Fine Tunning", icon: BeakerIcon },
   ];
 
   return (
@@ -31,7 +38,7 @@ const Sidebar = () => {
         } fixed md:static top-0 left-0 w-64 h-screen bg-[#f6f5f5] text-black p-5 transition-transform duration-300 md:translate-x-0 z-40`}
       >
         <h3 className="text-xl font-semibold mb-6">File Manager</h3>
-        <ul className="space-y-1" >
+        <ul className="space-y-1">
           {navLinks.map(({ path, label, icon: Icon }) => (
             <li key={path}>
               <Link

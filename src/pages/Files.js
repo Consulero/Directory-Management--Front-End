@@ -115,7 +115,6 @@ const FileList = () => {
   };
 
   const columns = [
-    { header: "ID", key: "id", width: "5%" },
     { header: "File", key: "file_name", width: "20%" },
     { header: "Manufacturer", key: "manufacturer", width: "10%" },
     { header: "Model", key: "model", width: "10%" },

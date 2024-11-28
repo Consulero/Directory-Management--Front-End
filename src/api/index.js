@@ -32,4 +32,7 @@ export const dashboardData = () => api.get(`/pdf-manuals/dashboard`);
 export const updateFiles = (formData, id) =>
   api.put(`/pdf-manuals/${id}`, formData);
 
+export const getFaqs = (page = 1, archived = false) =>
+  api.get(`/faqs?page=${page}&archived=${archived}`);
+
 export default api;
