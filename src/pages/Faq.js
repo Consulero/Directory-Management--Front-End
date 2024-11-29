@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getFaqs, archiveFiles } from "../api";
+import { getFaqs, approveFaq, fineTune } from "../api";
 import Table from "../components/Table";
 import HeaderSection from "../components/HeaderSection";
 import Pagination from "../components/Pagination";
@@ -35,8 +35,7 @@ const Faq = () => {
     setError(null);
 
     try {
-      const archivedStatus = false;
-      const response = await getFaqs(page, archivedStatus);
+      const response = await getFaqs(page);
       setFiles(response.data?.data || []);
       setTotalPages(response.data?.pagination?.totalPages || 1);
     } catch (err) {
@@ -46,21 +45,33 @@ const Faq = () => {
     }
   };
 
-//   const handleArchive = async () => {
-//     try {
-//       const data = { ids: selectedRows, archivedStatus: true };
-//       const result = await archiveFiles(data);
-//       if (result.status === 200) {
-//         setSelectedRows([]);
-//         // update the file to remove higlited row
-//         return toast.success(`${result.data.message} File Archived`);
-//       } else {
-//         return toast.error(result.data.message);
-//       }
-//     } catch (err) {
-//       toast.error("Failed to archive");
-//     }
-//   };
+  const handleArchive = async () => {
+    try {
+      const data = { ids: selectedRows, approveStatus: true };
+      const result = await approveFaq(data);
+      if (result.status === 200) {
+        setSelectedRows([]);
+        toast.success(`${result.data.message} Data Approved`);
+        window.location.reload();
+      } else {
+        return toast.error(result.data.message);
+      }
+    } catch (err) {
+      toast.error("Failed to approve");
+    }
+  };
+  const handleFineTune = async () => {
+    try {
+      const result = await fineTune();
+      if (result.status === 200) {
+        toast.success(`${result.data.message}`);
+      } else {
+        return toast.error(result.data.message);
+      }
+    } catch (err) {
+      toast.error("Failed to start fine-tunning");
+    }
+  };
 
   useEffect(() => {
     fetchFiles(currentPage);
@@ -77,10 +88,9 @@ const Faq = () => {
   };
 
   const columns = [
-    { header: "ID", key: "id", width: "5%" },
     { header: "Question", key: "question", width: "30%" },
     { header: "Answer", key: "answer", width: "50%" },
-    { header: "Status", key: "archived", width: "10%" },
+    { header: "Status", key: "approve", width: "10%" },
   ];
 
   if (loading) return <div>Loading files...</div>;
@@ -90,7 +100,13 @@ const Faq = () => {
     <>
       <div className="flex justify-between items-center mb-3">
         <HeaderSection title={"Faqs"} />
-        {/* <div className="ml-auto flex space-x-2">
+        <div className="ml-auto flex space-x-2">
+          <button
+            className={`px-3 py-1 text-sm rounded-md bg-[#454444] text-white hover:scale-110 transform transition-all duration-200`}
+            onClick={handleFineTune}
+          >
+            Fine-Tune
+          </button>
           <button
             disabled={selectedRows.length < 1}
             className={`px-3 py-1 text-sm rounded-md 
@@ -101,9 +117,9 @@ const Faq = () => {
         }`}
             onClick={handleArchive}
           >
-            Archive
+            Approve
           </button>
-        </div> */}
+        </div>
       </div>
       <Table data={files} columns={columns} onRowSelect={handleRowSelect} />
       <Pagination

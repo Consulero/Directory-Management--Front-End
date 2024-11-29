@@ -10,7 +10,6 @@ api.interceptors.request.use(
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
-
     return config;
   },
   (error) => {
@@ -32,7 +31,10 @@ export const dashboardData = () => api.get(`/pdf-manuals/dashboard`);
 export const updateFiles = (formData, id) =>
   api.put(`/pdf-manuals/${id}`, formData);
 
-export const getFaqs = (page = 1, archived = false) =>
-  api.get(`/faqs?page=${page}&archived=${archived}`);
+export const getFaqs = (page = 1) => api.get(`/faqs?page=${page}`);
+
+export const approveFaq = (data) => api.patch(`/faqs/archive`, data);
+
+export const fineTune = () => api.get(`/faqs/finetune`);
 
 export default api;

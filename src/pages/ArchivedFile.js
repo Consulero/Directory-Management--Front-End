@@ -85,8 +85,8 @@ const ArchivedFile = () => {
       const result = await deleteFiles(data);
       if (result.status === 200) {
         setSelectedRows([]);
-        // update the file to remove higlited row
-        return toast.success(`${result.data.message} Files Deleted`);
+        toast.success(`${result.data.message} Files Deleted`);
+        window.location.reload();
       } else {
         return toast.error(result.data.message);
       }
@@ -117,7 +117,7 @@ const ArchivedFile = () => {
     { header: "Published", key: "publication_date", width: "10%" },
     { header: "Uploaded At", key: "createdAt", width: "10%" },
     { header: "Age", key: "age", width: "10%" },
-    { header: "Uploaded By", key: "uploaded_by", width: "10%" },
+    // { header: "Uploaded By", key: "uploaded_by", width: "10%" },
   ];
 
   if (loading) return <div>Loading files...</div>;
