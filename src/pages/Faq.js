@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getFaqs, approveFaq, fineTune } from "../api";
+import { getFaqs, approveFaq, prepareJsonl } from "../api";
 import Table from "../components/Table";
 import HeaderSection from "../components/HeaderSection";
 import Pagination from "../components/Pagination";
@@ -12,6 +12,7 @@ const Faq = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [jsonlLoading, setJsonlLoading] = useState(false);
 
   const handleRowSelect = (rowIndex) => {
     const updatedFiles = [...files];
@@ -60,16 +61,22 @@ const Faq = () => {
       toast.error("Failed to approve");
     }
   };
-  const handleFineTune = async () => {
+  const createJsonl = async () => {
     try {
-      const result = await fineTune();
+      setJsonlLoading(true);
+      const result = await prepareJsonl();
+      console.log(result);
       if (result.status === 200) {
-        toast.success(`${result.data.message}`);
+        toast.success(`${result.data?.data} created`);
       } else {
         return toast.error(result.data.message);
       }
     } catch (err) {
-      toast.error("Failed to start fine-tunning");
+      toast.error(
+        err.response?.data?.message || "Failed to prepare JSONL file"
+      );
+    } finally {
+      setJsonlLoading(false);
     }
   };
 
@@ -90,7 +97,7 @@ const Faq = () => {
   const columns = [
     { header: "Question", key: "question", width: "30%" },
     { header: "Answer", key: "answer", width: "50%" },
-    { header: "Status", key: "approve", width: "10%" },
+    { header: "Approve", key: "approve", width: "10%" },
   ];
 
   if (loading) return <div>Loading files...</div>;
@@ -102,10 +109,15 @@ const Faq = () => {
         <HeaderSection title={"Faqs"} />
         <div className="ml-auto flex space-x-2">
           <button
-            className={`px-3 py-1 text-sm rounded-md bg-[#454444] text-white hover:scale-110 transform transition-all duration-200`}
-            onClick={handleFineTune}
+            className={`px-3 py-1 text-sm rounded-md ${
+              jsonlLoading
+                ? "bg-gray-300 text-white cursor-not-allowed"
+                : "bg-[#454444] text-white hover:scale-110"
+            }`}
+            onClick={createJsonl}
+            disabled={jsonlLoading}
           >
-            Fine-Tune
+            + JSONL
           </button>
           <button
             disabled={selectedRows.length < 1}

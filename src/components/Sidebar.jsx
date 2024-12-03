@@ -6,6 +6,7 @@ import {
   FilesIcon,
   ArchiveIcon,
   BeakerIcon,
+  FaqIcon,
 } from "../icons";
 
 const Sidebar = () => {
@@ -21,7 +22,8 @@ const Sidebar = () => {
     { path: "/files", label: "Files", icon: FilesIcon },
     { path: "/archive-files", label: "Archived", icon: ArchiveIcon },
     { path: "/upload", label: "Upload", icon: UploadIcon },
-    { path: "/faqs", label: "Fine Tunning", icon: BeakerIcon },
+    { path: "/faqs", label: "FAQ", icon: FaqIcon },
+    { path: "/fine-tune", label: "Fine-Tune", icon: BeakerIcon },
   ];
 
   return (

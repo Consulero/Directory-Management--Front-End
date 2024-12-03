@@ -11,6 +11,7 @@ import Fileupload from "./pages/Fileupload";
 import Files from "./pages/Files";
 import ArchivedFile from "./pages/ArchivedFile";
 import Faq from "./pages/Faq";
+import FineTune from "./pages/FineTune";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
             <Route path="/files" element={<Files />} />
             <Route path="/archive-files" element={<ArchivedFile />} />
             <Route path="/faqs" element={<Faq />} />
+            <Route path="/fine-tune" element={<FineTune />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

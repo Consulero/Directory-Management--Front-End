@@ -35,6 +35,15 @@ export const getFaqs = (page = 1) => api.get(`/faqs?page=${page}`);
 
 export const approveFaq = (data) => api.patch(`/faqs/archive`, data);
 
-export const fineTune = () => api.get(`/faqs/finetune`);
+export const prepareJsonl = () => api.get(`/faqs/jsonl`);
+
+export const getTrainingFile = (page = 1) =>
+  api.get(`/training-files?page=${page}`);
+
+export const refreshFinetuneSatus = (fileId, id, status) =>
+  api.get(`/training-files/refresh/${id}?fileid=${fileId}&status=${status}`);
+
+export const fineTune = (formData) =>
+  api.post(`/training-files/finetune`, formData);
 
 export default api;
